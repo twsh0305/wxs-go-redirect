@@ -46,6 +46,15 @@
 | `gradient` | 渐变风格 |
 | `matrix` | 矩阵风格 |
 
+## 截图
+
+| 截图 | 说明 |
+|------|------|
+| ![基本设置](assets/img/screenshot-1.png) | Nonce 动态刷新开关与倒计时 |
+| ![模板选择](assets/img/screenshot-2.png) | 可视化切换 10 套跳转页 |
+| ![黑名单设置](assets/img/screenshot-3.png) | 本地文件 / 远程订阅 |
+| ![前台效果](assets/img/screenshot-4.png) | 倒计时卡片与安全提示 |
+
 ## 开源协议
 
 本项目采用 [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html) 开源协议。
