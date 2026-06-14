@@ -56,11 +56,19 @@
 
 > **关于倒卖**：GPL v3.0 虽然允许收费分发，但要求分发者必须同时提供完整源代码且保持 GPL v3.0 协议。任何购买者都有权免费再分发，使得单纯倒卖缺乏商业可行性。若发现他人未经授权删除作者信息后销售，可通过 GPL 协议追究侵权责任。
 
-## 作者
+## 贡献者
 
-**天无神话** | [wxsnote.cn](https://wxsnote.cn)
+<p align="center">
+  <a href="https://github.com/twsh0305/wxs-go-redirect/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=twsh0305/wxs-go-redirect&max=30" alt="Contributors">
+  </a>
+</p>
 
-![avatar](https://q.qlogo.cn/headimg_dl?dst_uin=2031301686&spec=140&img_type=jpg)
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=twsh0305/wxs-go-redirect&type=Date)](https://star-history.com/#twsh0305/wxs-go-redirect&Date)
+
+## 作者信息
 
 - QQ：2031301686 | [加好友](https://qm.qq.com/q/aKlJlhh4VU)
 - QQ群：399019539 | [加群](https://jq.qq.com/?_wv=1027&k=eiGEOg3i)
