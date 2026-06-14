@@ -109,7 +109,7 @@ function wxs_go_activation() {
         $defaults = array(
             'enable'            => '1',
             'blacklist_source'  => 'file',
-            'blacklist_file'    => get_template_directory() . '/zidingyi/wjym/wjym.txt',
+            'blacklist_file'    => WP_CONTENT_DIR . '/blacklisted-domain.txt',
             'blacklist_encoded' => 'base64',
             'blacklist_manual'  => '',
             'blacklist_extra'   => '',
