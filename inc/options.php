@@ -433,7 +433,7 @@ function wxs_go_admin_csf_options() {
                 'type'  => 'text',
                 'title' => '黑名单文件路径',
                 'desc'  => '黑名单文件的服务器绝对路径。<br><strong>允许的文件扩展名：</strong><code>.txt</code>、<code>.list</code>、<code>.conf</code>、<code>.dat</code>、<code>.csv</code>（仅纯文本文件）。<br><strong>支持的内容格式</strong>（由下方数据格式设置决定）：<br>• 明文：每行一个域名<br>• Base64编码：整体内容Base64编码后再按行解析<br>• AutoProxy：AdBlock规则格式（Base64编码）<br><br>文件首次被访问时自动解析并生成PHP hashmap缓存（<code>wp-content/wxs-go-blacklist-local-cache.php</code>），后续请求直接读取缓存，源文件更新后缓存自动重建。',
-                'default' => get_template_directory() . '/zidingyi/wjym/wjym.txt',
+                'default' => WP_CONTENT_DIR . '/blacklisted-domain.txt',
                 'dependency' => array('blacklist_source|blacklist_data_type', '==|==', 'file|local'),
             ),
             // 远程订阅URL
