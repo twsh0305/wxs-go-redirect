@@ -217,9 +217,15 @@ function wxs_go_render_page($golink_query, $nonce = '') {
         exit;
     }
 
-    // nonce 验证
+    // 鉴权验证
+    // 子比 9.2+ 的签名绑定目标地址，必须在转义处理前用原始地址验证
     $is_nonce_invalid = false;
-    if (empty($nonce) || !wp_verify_nonce($nonce, 'go_link_nonce')) {
+    if (wxs_go_use_sign()) {
+        $raw_url = trim((string) base64_decode($golink_query));
+        if ($raw_url === '' || empty($nonce) || !zib_verify_unique_hmac_str($raw_url, $nonce)) {
+            $is_nonce_invalid = true;
+        }
+    } elseif (empty($nonce) || !wp_verify_nonce($nonce, 'go_link_nonce')) {
         $is_nonce_invalid = true;
     }
 

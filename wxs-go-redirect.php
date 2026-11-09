@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: 外链重定向增强
- * Description: 配合子比主题外链重定向+鉴权功能，解决各类缓存插件导致的外链重定向 nonce 鉴权失效问题，提供多风格跳转页模板和域名黑名单拦截。依赖子比主题同时开启「外链重定向」和「外链重定向鉴权」。
- * Version: 1.0.0
+ * Description: 配合子比主题外链重定向+鉴权功能，解决各类缓存插件导致的外链重定向 nonce 鉴权失效问题，提供多风格跳转页模板和域名黑名单拦截。依赖子比主题同时开启「外链重定向」和「外链重定向鉴权」。兼容子比 9.1（WP nonce）与 9.2+（HMAC 地址签名）两种鉴权机制。
+ * Version: 1.1.0
  * Requires at least: 6.4
  * Tested up to: 7.0
  * Requires PHP: 7.4
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
 
 define('wxs_go_url', plugins_url('', __FILE__));
 define('wxs_go_path', plugin_dir_path(__FILE__));
-define('wxs_go_ver', '1.0.0');
+define('wxs_go_ver', '1.1.0');
 define('wxs_go_file', __FILE__);
 
 // 加载GitHub更新检测
@@ -109,7 +109,7 @@ function wxs_go_activation() {
         $defaults = array(
             'enable'            => '1',
             'blacklist_source'  => 'file',
-            'blacklist_file'    => WP_CONTENT_DIR . '/blacklisted-domain.txt',
+            'blacklist_file'    => get_template_directory() . '/zidingyi/wjym/wjym.txt',
             'blacklist_encoded' => 'base64',
             'blacklist_manual'  => '',
             'blacklist_extra'   => '',

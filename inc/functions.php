@@ -22,6 +22,34 @@ function wxs_go_nonce_life($life) {
     return $life;
 }
 
+// 鉴权模式判断
+// 子比 9.2+ 改为 HMAC 目标地址签名：绑定跳转地址、约 1 小时过期，9.1 及以前为全局 WP nonce
+
+/**
+ * 是否为子比 9.2+ 的签名模式
+ */
+function wxs_go_use_sign() {
+    return function_exists('zib_get_unique_hmac_str') && function_exists('zib_verify_unique_hmac_str');
+}
+
+/**
+ * 生成单个链接的 nonce
+ * @param string $golink_query golink 参数值（base64 编码的目标地址）
+ * @return string
+ */
+function wxs_go_make_nonce($golink_query = '') {
+    if (wxs_go_use_sign()) {
+        $url = trim((string) base64_decode($golink_query));
+        if ($url === '') {
+            return '';
+        }
+        // 与主题 zib_get_gourl() 保持完全一致的签名参数
+        return zib_get_unique_hmac_str($url, HOUR_IN_SECONDS);
+    }
+    // 9.1：全局 WP nonce
+    return wp_create_nonce('go_link_nonce');
+}
+
 // Nonce 刷新 AJAX 接口
 
 add_action('wp_ajax_nopriv_wxs_go_nonce', 'wxs_go_nonce_ajax');
@@ -30,9 +58,35 @@ function wxs_go_nonce_ajax() {
     if (!wxs_go_is_enabled()) {
         wp_send_json_error(array('msg' => '功能未启用'));
     }
+
+    // 9.1：全局 nonce 单值返回（兼容旧调用）
+    if (!wxs_go_use_sign()) {
+        wp_send_json_success(array(
+            'nonce' => wp_create_nonce('go_link_nonce'),
+            'time'  => time(),
+        ));
+    }
+
+    // 9.2+：签名绑定目标地址，需按链接逐条生成
+    $golinks = isset($_GET['golinks']) ? (array) wp_unslash($_GET['golinks']) : array();
+    $golinks = array_slice($golinks, 0, 100); // 单次上限 100 条，避免滥用
+    $nonces  = array();
+
+    foreach ($golinks as $golink) {
+        $golink = is_string($golink) ? trim($golink) : '';
+        if ($golink === '') {
+            continue;
+        }
+        $nonce = wxs_go_make_nonce($golink);
+        if ($nonce !== '') {
+            $nonces[$golink] = $nonce;
+        }
+    }
+
     wp_send_json_success(array(
-        'nonce' => wp_create_nonce('go_link_nonce'),
-        'time'  => time(),
+        'nonces' => $nonces,
+        'sign'   => true,
+        'time'   => time(),
     ));
 }
 
@@ -68,11 +122,16 @@ function wxs_go_enqueue_assets() {
     $tick_duration = max(1, (int) ($nonce_life / 2));
     $current_tick  = (int) ceil(time() / $tick_duration);
 
+    // 9.2+ 签名约 1 小时过期，刷新间隔取 30 分钟留出余量
+    $sign_mode = wxs_go_use_sign();
+
     wp_localize_script('wxs-go-link-refresh', 'wxs_go_config', array(
-        'ajax_url'      => admin_url('admin-ajax.php'),
-        'enable'        => true,
-        'nonce_tick'    => $current_tick,
-        'tick_duration' => $tick_duration,
+        'ajax_url'         => admin_url('admin-ajax.php'),
+        'enable'           => true,
+        'sign_mode'        => $sign_mode,
+        'nonce_tick'       => $current_tick,
+        'tick_duration'    => $tick_duration,
+        'refresh_interval' => $sign_mode ? 1800 : 0,
     ));
 }
 
